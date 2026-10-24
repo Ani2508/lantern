@@ -1,0 +1,26 @@
+[
+ {
+  "transfer_id": "plan_wildfire_demo_01_naive_h009_t01",
+  "decision": "REVIEW",
+  "rule_hits": [
+   "R5_STALE_SOURCE"
+  ],
+  "reason_text": "Central Pharmacy data is 7 h old."
+ },
+ {
+  "transfer_id": "plan_wildfire_demo_01_naive_h009_t02",
+  "decision": "REVIEW",
+  "rule_hits": [
+   "R5_STALE_SOURCE"
+  ],
+  "reason_text": "Central Pharmacy data is 7 h old."
+ },
+ {
+  "transfer_id": "plan_wildfire_demo_01_naive_h009_t03",
+  "decision": "REVIEW",
+  "rule_hits": [
+   "R5_STALE_SOURCE"
+  ],
+  "reason_text": "Central Pharmacy data is 7 h old."
+ }
+]

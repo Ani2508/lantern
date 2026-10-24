@@ -1,0 +1,52 @@
+[
+ {
+  "scenario_id": "wildfire_demo_01",
+  "site_id": "S01",
+  "name": "Shelter A",
+  "site_type": "shelter",
+  "lat": 37.3,
+  "lon": -121.9,
+  "people_served": 300,
+  "created_at": "2026-11-07T08:00:00Z"
+ },
+ {
+  "scenario_id": "wildfire_demo_01",
+  "site_id": "S02",
+  "name": "Shelter B",
+  "site_type": "shelter",
+  "lat": 37.31,
+  "lon": -121.88,
+  "people_served": 250,
+  "created_at": "2026-11-07T08:00:00Z"
+ },
+ {
+  "scenario_id": "wildfire_demo_01",
+  "site_id": "S03",
+  "name": "Riverside Clinic",
+  "site_type": "clinic",
+  "lat": 37.34,
+  "lon": -121.93,
+  "people_served": 80,
+  "created_at": "2026-11-07T08:00:00Z"
+ },
+ {
+  "scenario_id": "wildfire_demo_01",
+  "site_id": "S04",
+  "name": "Central Pharmacy",
+  "site_type": "pharmacy",
+  "lat": 37.305,
+  "lon": -121.89,
+  "people_served": 150,
+  "created_at": "2026-11-07T08:00:00Z"
+ },
+ {
+  "scenario_id": "wildfire_demo_01",
+  "site_id": "S05",
+  "name": "County Food Bank",
+  "site_type": "food_bank",
+  "lat": 37.28,
+  "lon": -121.94,
+  "people_served": 120,
+  "created_at": "2026-11-07T08:00:00Z"
+ }
+]

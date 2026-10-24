@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#0b0f14" />
+  <title>Lantern fallback plan</title>
+  <style>
+    :root {
+      --bg: #0b0f14; --surface: #121821; --surface-2: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.08);
+      --text: #e8ecf1; --muted: #8a94a3; --amber: #f2a900;
+      --approve: #22c55e; --review: #f59e0b; --block: #ef4444;
+      --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    @media (prefers-color-scheme: light) {
+      :root { --bg: #f6f2ea; --surface: #fff; --surface-2: rgba(27,31,36,0.04); --border: rgba(27,31,36,0.1);
+        --text: #1b1f24; --muted: #6b7280; --amber: #b97f00; --approve: #15803d; --review: #c2410c; --block: #dc2626; }
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--text);
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
+    .banner {
+      background: #000; color: #f2a900; text-align: center; font-size: 10.5px; font-weight: 700;
+      letter-spacing: 0.14em; text-transform: uppercase; padding: 7px 12px;
+    }
+    main { max-width: 560px; margin: 0 auto; padding: 18px 16px 32px; }
+    header { display: flex; align-items: center; gap: 10px; }
+    .mark {
+      width: 32px; height: 32px; border-radius: 9px; flex: none;
+      background: radial-gradient(circle at 50% 60%, #ffd56a, #f2a900 45%, #8a5a00 100%);
+      box-shadow: 0 0 18px rgba(242,169,0,0.45);
+    }
+    h1 { font-size: 20px; margin: 0; letter-spacing: -0.02em; }
+    .sub { font-size: 12px; color: var(--muted); }
+    .synced {
+      display: flex; align-items: center; gap: 8px; margin: 14px 0 18px; padding: 9px 12px;
+      border-radius: 12px; background: var(--surface-2); border: 1px solid var(--border);
+      font-family: var(--mono); font-size: 12px; color: var(--muted);
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--approve); box-shadow: 0 0 8px var(--approve); }
+    h2 { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); margin: 22px 0 10px; }
+    .card {
+      background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--border);
+      border-radius: 14px; padding: 12px 14px; margin: 8px 0;
+    }
+    .card.APPROVE { border-left-color: var(--approve); }
+    .card.REVIEW { border-left-color: var(--review); }
+    .card.BLOCK { border-left-color: var(--block); }
+    .card.scout { border-left-color: var(--amber); }
+    .top { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+    .qty { font-family: var(--mono); font-weight: 700; }
+    .route { font-size: 13px; color: var(--muted); margin-top: 2px; }
+    .why { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
+    .chip {
+      font-size: 10.5px; font-weight: 700; letter-spacing: 0.05em; padding: 2px 8px; border-radius: 99px;
+      white-space: nowrap;
+    }
+    .chip.APPROVE { color: var(--approve); background: color-mix(in srgb, var(--approve) 14%, transparent); }
+    .chip.REVIEW { color: var(--review); background: color-mix(in srgb, var(--review) 14%, transparent); }
+    .chip.BLOCK { color: var(--block); background: color-mix(in srgb, var(--block) 14%, transparent); }
+    .chip.scout { color: var(--amber); background: color-mix(in srgb, var(--amber) 14%, transparent); }
+    .empty, .err { color: var(--muted); font-size: 13px; }
+    .err { color: var(--block); }
+    footer { margin-top: 26px; font-size: 11px; color: var(--muted); text-align: center; }
+  </style>
+</head>
+<body>
+  <div class="banner">Simulated data · synthetic scenario for demonstration only</div>
+  <main>
+    <header>
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <h1 id="title">Lantern plan</h1>
+        <div class="sub">Static fallback · works when the main app is down</div>
+      </div>
+    </header>
+    <div class="synced"><span class="dot"></span><span id="meta">Loading plan.json…</span></div>
+    <h2>Transfers</h2>
+    <div id="transfers"></div>
+    <h2>Scout visits</h2>
+    <div id="scouts"></div>
+    <footer>Served from S3 + CloudFront · no API or database needed</footer>
+  </main>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+    const LABEL = { APPROVE: "Approved", REVIEW: "Needs review", BLOCK: "Blocked" };
+    const UNIT = { water: "gal", food: "meals", insulin: "vials" };
+    const fmt = (q) => (Math.abs(q) < 10 ? Math.round(q * 10) / 10 : Math.round(q)).toLocaleString();
+    fetch("plan.json", { cache: "no-store" })
+      .then((r) => { if (!r.ok) throw new Error("plan.json not found"); return r.json(); })
+      .then((data) => {
+        const plan = data.plan || data;
+        const names = data.site_names || {};
+        const name = (id) => esc(names[id] || id);
+        $("title").textContent = (data.planner_name || "Lantern") + " plan";
+        const synced = (data.updated_at || plan.created_at || "").replace("T", " ").replace("Z", " UTC");
+        $("meta").textContent = "Last synced H+" + String(plan.sim_hour).padStart(2, "0") + (synced ? " · " + synced : "");
+        const transfers = (plan.transfers || []).map((t) => {
+          const d = t.decision || "";
+          return `<article class="card ${d}">
+            <div class="top"><span><span class="qty">${fmt(t.qty)}</span> ${UNIT[t.supply_id] || ""} ${esc(t.supply_id)}</span>
+              ${d ? `<span class="chip ${d}">${LABEL[d] || d}</span>` : ""}</div>
+            <div class="route">${name(t.source_site_id)} → ${name(t.dest_site_id)} · ${esc(t.distance_km)} km</div>
+            ${t.reason_text ? `<div class="why">${esc(t.reason_text)}</div>` : ""}
+          </article>`;
+        });
+        $("transfers").innerHTML = transfers.join("") || '<p class="empty">No transfers.</p>';
+        const scouts = (plan.scouts || []).map((s) => `<article class="card scout">
+            <div class="top"><strong>${name(s.site_id)}</strong><span class="chip scout">Scout</span></div>
+            <div class="route">Count: ${esc((s.supply_ids || []).join(", "))}</div>
+            <div class="why">${esc(s.reason_text)}</div>
+          </article>`);
+        $("scouts").innerHTML = scouts.join("") || '<p class="empty">No scout visits.</p>';
+      })
+      .catch((e) => { $("meta").innerHTML = `<span class="err">${esc(e.message)}</span>`; });
+  </script>
+</body>
+</html>

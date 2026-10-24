@@ -1,0 +1,12 @@
+version = 0.1
+
+[dev.deploy.parameters]
+stack_name = "lantern-dev"
+region = "us-east-1"
+confirm_changeset = false
+capabilities = "CAPABILITY_IAM"
+resolve_s3 = true
+parameter_overrides = "LanternEnv=dev UseCloudFront=true BedrockEnabled=false NotifyEnabled=false BedrockModelId=us.anthropic.claude-haiku-4-5-20251001-v1:0 BedrockFallbackModelId=us.amazon.nova-lite-v1:0"
+
+[dev.build.parameters]
+use_container = true

@@ -1,0 +1,20 @@
+# Placeholder handles: replace with the team's GitHub usernames.
+*                @lantern-m1
+/infra/          @lantern-m1
+/lantern_core/   @lantern-m1
+/api/            @lantern-m1
+/scripts/        @lantern-m1
+/.github/        @lantern-m1
+/simulator/      @lantern-m2
+/ingest/         @lantern-m2
+/baselines/      @lantern-m2
+/eval/           @lantern-m2
+/tests/fixtures/ @lantern-m2
+/engine/         @lantern-m3
+/models/         @lantern-m3
+/gate/           @lantern-m4
+/explain/        @lantern-m4
+/alerts/         @lantern-m4
+/web/fallback/   @lantern-m4
+/dashboard/      @lantern-m5
+/presentation/   @lantern-m5

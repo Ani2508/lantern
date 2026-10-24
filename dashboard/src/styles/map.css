@@ -1,0 +1,300 @@
+/* Map: tiles, site beacons, uncertainty halos, transfer arcs, fire overlay. */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  font-family: var(--font);
+}
+.leaflet-tile-pane {
+  filter: var(--map-filter);
+}
+.leaflet-control-attribution {
+  background: color-mix(in srgb, var(--bg) 70%, transparent) !important;
+  color: var(--muted) !important;
+  font-size: 10px !important;
+}
+.leaflet-control-attribution a {
+  color: var(--text-2) !important;
+}
+.leaflet-control-zoom a {
+  background: var(--surface-solid) !important;
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+.map-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 401;
+  background: radial-gradient(ellipse at center, transparent 55%, color-mix(in srgb, var(--bg) 75%, transparent) 100%);
+}
+.map-shake {
+  animation: shake 520ms cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes shake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-7px, 0, 0); }
+  40%, 60% { transform: translate3d(7px, 0, 0); }
+}
+.edge-pulse {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 402;
+  box-shadow: inset 0 0 0 0 rgba(239, 68, 68, 0);
+  animation: edge 1100ms var(--ease) forwards;
+}
+@keyframes edge {
+  30% { box-shadow: inset 0 0 120px 10px rgba(239, 68, 68, 0.45); }
+  100% { box-shadow: inset 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+.map-note {
+  position: absolute;
+  right: 12px;
+  top: 12px;
+  z-index: 450;
+  font-size: 10.5px;
+  padding: 4px 9px;
+  border-radius: 8px;
+  color: var(--muted);
+  background: color-mix(in srgb, var(--bg) 75%, transparent);
+  border: 1px solid var(--border);
+  pointer-events: none;
+}
+
+/* Site beacon (rendered into a Leaflet divIcon through a React portal) */
+.site-host {
+  background: none;
+  border: 0;
+}
+.beacon {
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  pointer-events: auto;
+  cursor: pointer;
+  --c: var(--live);
+}
+.beacon.stale {
+  --c: var(--stale);
+}
+.beacon.mixed {
+  --c: var(--review);
+}
+/* Uncertainty "fog": grows with the width of the stock estimate, snaps shut on a fresh count. */
+.beacon .halo {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    color-mix(in srgb, var(--review) 26%, transparent) 0%,
+    color-mix(in srgb, var(--review) 10%, transparent) 55%,
+    transparent 72%
+  );
+  border: 1.5px dashed color-mix(in srgb, var(--review) 70%, transparent);
+  transition: width 900ms var(--ease), height 900ms var(--ease), opacity 500ms var(--ease);
+  animation: fog-spin 24s linear infinite;
+  pointer-events: none;
+}
+@keyframes fog-spin {
+  to { transform: rotate(360deg); }
+}
+.beacon .pulse {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  border: 2px solid var(--c);
+  opacity: 0;
+  pointer-events: none;
+}
+.beacon.live .pulse {
+  animation: heartbeat 2.4s var(--ease) infinite;
+}
+@keyframes heartbeat {
+  0% { transform: scale(0.6); opacity: 0.7; }
+  70%, 100% { transform: scale(1.5); opacity: 0; }
+}
+.beacon .core {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--surface-solid);
+  color: var(--c);
+  border: 2px solid var(--c);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--c) 55%, transparent), var(--shadow-sm);
+  transition: color 600ms var(--ease), border-color 600ms var(--ease), box-shadow 600ms var(--ease),
+    transform 400ms var(--ease), filter 600ms var(--ease);
+}
+.beacon.stale .core {
+  box-shadow: var(--shadow-sm);
+  filter: saturate(0.4);
+}
+.beacon.big .core {
+  transform: scale(1.18);
+}
+.beacon:hover .core {
+  transform: scale(1.1);
+}
+.beacon .core svg {
+  width: 19px;
+  height: 19px;
+}
+.beacon .label {
+  position: absolute;
+  top: 26px;
+  white-space: nowrap;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  text-shadow: 0 1px 3px var(--bg), 0 0 8px var(--bg);
+  pointer-events: none;
+}
+.beacon .label small {
+  display: block;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.beacon .age {
+  position: absolute;
+  top: -30px;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 7px;
+  background: var(--stale);
+  color: #fff;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.beacon .lost {
+  position: absolute;
+  top: -54px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--block);
+  white-space: nowrap;
+  animation: lost 2.2s steps(1) forwards;
+  pointer-events: none;
+}
+@keyframes lost {
+  0%, 20%, 40% { opacity: 1; }
+  10%, 30% { opacity: 0.1; }
+  70% { opacity: 1; }
+  100% { opacity: 0; }
+}
+.beacon.reignite .core {
+  animation: reignite 1.2s var(--ease);
+}
+@keyframes reignite {
+  0% { transform: scale(0.8); box-shadow: 0 0 0 0 color-mix(in srgb, var(--live) 70%, transparent); }
+  40% { transform: scale(1.3); box-shadow: 0 0 0 26px transparent; }
+  100% { transform: scale(1); }
+}
+.beacon .scout {
+  position: absolute;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  border: 2px solid var(--amber);
+  pointer-events: none;
+  background: conic-gradient(from 0deg, color-mix(in srgb, var(--amber) 35%, transparent), transparent 25%);
+  animation: radar 2.6s linear infinite;
+}
+@keyframes radar {
+  to { transform: rotate(360deg); }
+}
+.beacon .scout-tag {
+  position: absolute;
+  top: 54px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: var(--amber);
+  color: #1a1204;
+  white-space: nowrap;
+  pointer-events: none;
+}
+.beacon.dimmed {
+  opacity: 0.35;
+  transition: opacity 500ms var(--ease);
+}
+
+/* Transfer arcs (SVG paths in Leaflet's overlay pane) */
+.arc {
+  fill: none;
+  stroke-linecap: round;
+  filter: drop-shadow(0 0 6px currentColor);
+}
+.arc.flow {
+  stroke-dasharray: 2 12 !important;
+  animation: flow 0.9s linear infinite;
+}
+@keyframes flow {
+  to { stroke-dashoffset: -14; }
+}
+.arc.ghost {
+  opacity: 0.25;
+}
+.arc-label {
+  background: none;
+  border: 0;
+}
+.arc-label span {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 7px;
+  color: #fff;
+  box-shadow: var(--shadow-sm);
+}
+.arc-x span {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--block);
+  color: #fff;
+  box-shadow: 0 0 18px var(--block);
+}
+
+/* Fire overlay */
+.fire-blob {
+  pointer-events: none;
+}
+.fire-label {
+  background: none;
+  border: 0;
+}
+.fire-label span {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--fire);
+  text-shadow: 0 0 8px var(--bg);
+}

@@ -1,0 +1,20 @@
+[
+ {
+  "text": "at central pharmacy now, counted 19 vials of insulin, fridge ok, line out the door",
+  "expected": {
+   "site_id": "S04",
+   "supply_id": "insulin",
+   "qty": 19
+  },
+  "expected_needs_confirmation_rules": false
+ },
+ {
+  "text": "shelter b update: maybe 1 vial insulin left, water fine",
+  "expected": {
+   "site_id": "S02",
+   "supply_id": "insulin",
+   "qty": 1
+  },
+  "expected_needs_confirmation_rules": true
+ }
+]

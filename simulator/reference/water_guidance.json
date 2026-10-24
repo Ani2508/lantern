@@ -1,0 +1,8 @@
+{
+ "source_name": "Ready Illinois - Water (based on Ready.gov guidance)",
+ "source_url": "https://www.ready.gov/water",
+ "retrieved_on": "2026-10-23",
+ "gallons_per_person_per_day": 1.0,
+ "min_days": 3,
+ "note": "Store one gallon of water per person per day, at least a three-day supply. The only real-world number Lantern uses; all stock, demand and reporting data is synthetic. Confirm the exact Ready Illinois page URL before submission."
+}

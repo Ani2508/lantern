@@ -1,0 +1,27 @@
+{
+ "S01": {
+  "water": 2000,
+  "food": 6000,
+  "insulin": 4.5
+ },
+ "S02": {
+  "water": 2000,
+  "food": 5000,
+  "insulin": 1.7
+ },
+ "S03": {
+  "water": 400,
+  "food": 1000,
+  "insulin": 40.0
+ },
+ "S04": {
+  "water": 1000,
+  "food": 3000,
+  "insulin": 40.125
+ },
+ "S05": {
+  "water": 3000,
+  "food": 5000,
+  "insulin": 4.0
+ }
+}

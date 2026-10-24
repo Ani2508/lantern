@@ -1,0 +1,72 @@
+{
+ "scenario_id": "wildfire_demo_01",
+ "plan_id": "plan_wildfire_demo_01_naive_h009",
+ "session_id": "sess_wildfire_demo_01_naive_20261107T080000",
+ "planner": "naive",
+ "sim_hour": 9,
+ "data_loss_pct": 40.0,
+ "apply_gate": true,
+ "transfers": [
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t01",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 6.0,
+   "priority_rank": 1,
+   "distance_km": 1.04,
+   "decision": "REVIEW",
+   "rule_hits": [
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "Central Pharmacy data is 7 h old.",
+   "explanation_text": "Send 6 vials of insulin from Central Pharmacy to Shelter A (1.04 km). REVIEW: Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t02",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S02",
+   "supply_id": "insulin",
+   "qty": 6.0,
+   "priority_rank": 2,
+   "distance_km": 1.04,
+   "decision": "REVIEW",
+   "rule_hits": [
+    "R4_SESSION_DRAW",
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "2 transfers from Central Pharmacy together are close to its session draw limit. Central Pharmacy data is 7 h old.",
+   "explanation_text": "Send 6 vials of insulin from Central Pharmacy to Shelter B (1.04 km). REVIEW: 2 transfers from Central Pharmacy together are close to its session draw limit. Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t03",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 6.0,
+   "priority_rank": 3,
+   "distance_km": 1.04,
+   "decision": "BLOCK",
+   "rule_hits": [
+    "R1_SOURCE_RESERVE",
+    "R4_SESSION_DRAW",
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "Central Pharmacy would fall below its 72 h insulin reserve. 3 transfers from Central Pharmacy together would exceed its session draw limit. Central Pharmacy data is 7 h old.",
+   "explanation_text": "Send 6 vials of insulin from Central Pharmacy to Shelter A (1.04 km). BLOCK: Central Pharmacy would fall below its 72 h insulin reserve. 3 transfers from Central Pharmacy together would exceed its session draw limit. Central Pharmacy data is 7 h old."
+  }
+ ],
+ "scouts": [],
+ "counts": {
+  "approve": 0,
+  "review": 2,
+  "block": 1
+ },
+ "summary_text": "Naive AI (trusts old data) plan at hour 9: 3 transfers (0 APPROVE, 2 REVIEW, 1 BLOCK). The gate blocked 1 transfer, e.g. 6 insulin from Central Pharmacy: Central Pharmacy would fall below its 72 h insulin reserve. 3 transfers from Central Pharmacy together would exceed its session draw limit. Central Pharmacy data is 7 h old. 40% of sites have no live data.",
+ "explanation_source": "template",
+ "runtime_ms": 12.0,
+ "created_at": "2026-11-07T17:00:00Z"
+}

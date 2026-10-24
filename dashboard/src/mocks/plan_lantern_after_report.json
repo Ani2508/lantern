@@ -1,0 +1,99 @@
+{
+ "scenario_id": "wildfire_demo_01",
+ "plan_id": "plan_wildfire_demo_01_lantern_h009",
+ "session_id": "sess_wildfire_demo_01_lantern_20261107T080000b",
+ "planner": "lantern",
+ "sim_hour": 9,
+ "data_loss_pct": 20.0,
+ "apply_gate": true,
+ "transfers": [
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t01",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S02",
+   "supply_id": "insulin",
+   "qty": 6.0,
+   "priority_rank": 1,
+   "distance_km": 1.04,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All five safety rules pass.",
+   "explanation_text": "Send 6 vials of insulin from Central Pharmacy to Shelter B (1.04 km). APPROVE: All five safety rules pass."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t02",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 3.11,
+   "priority_rank": 2,
+   "distance_km": 1.04,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All five safety rules pass.",
+   "explanation_text": "Send 3.11 vials of insulin from Central Pharmacy to Shelter A (1.04 km). APPROVE: All five safety rules pass."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t03",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S03",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 6.0,
+   "priority_rank": 3,
+   "distance_km": 5.18,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All five safety rules pass.",
+   "explanation_text": "Send 6 vials of insulin from Riverside Clinic to Shelter A (5.18 km). APPROVE: All five safety rules pass."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t04",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S03",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 3.1,
+   "priority_rank": 4,
+   "distance_km": 5.18,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All five safety rules pass.",
+   "explanation_text": "Send 3.1 vials of insulin from Riverside Clinic to Shelter A (5.18 km). APPROVE: All five safety rules pass."
+  }
+ ],
+ "scouts": [
+  {
+   "scout_id": "plan_wildfire_demo_01_lantern_h009_s01",
+   "site_id": "S02",
+   "supply_ids": [
+    "insulin",
+    "food",
+    "water"
+   ],
+   "voi_score": 2.75,
+   "reason_text": "Insulin at Shelter B is somewhere between 0.1 and 1.4 vials; a count changes the plan."
+  },
+  {
+   "scout_id": "plan_wildfire_demo_01_lantern_h009_s02",
+   "site_id": "S04",
+   "supply_ids": [
+    "food",
+    "water"
+   ],
+   "voi_score": 0.96,
+   "reason_text": "Food at Central Pharmacy is somewhere between 1467 and 4196 meals; a count changes the plan."
+  }
+ ],
+ "counts": {
+  "approve": 4,
+  "review": 0,
+  "block": 0
+ },
+ "summary_text": "Lantern plan at hour 9: 4 transfers (4 APPROVE, 0 REVIEW, 0 BLOCK). Send scouts to count stock at Shelter B (insulin, food, water), Central Pharmacy (food, water). 20% of sites have no live data.",
+ "explanation_source": "template",
+ "runtime_ms": 12.0,
+ "created_at": "2026-11-07T17:00:00Z"
+}

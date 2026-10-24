@@ -1,0 +1,29 @@
+[
+ {
+  "sim_hour": 2,
+  "type": "hazard_start",
+  "hazard": "wildfire"
+ },
+ {
+  "sim_hour": 2,
+  "type": "site_dark",
+  "site_ids": [
+   "S02",
+   "S04"
+  ]
+ },
+ {
+  "sim_hour": 3,
+  "type": "evacuee_arrival",
+  "site_id": "S01",
+  "people": 200
+ },
+ {
+  "sim_hour": 3,
+  "type": "demand_spike",
+  "site_id": "S04",
+  "supply_id": "insulin",
+  "extra_qty": 19.5,
+  "over_hours": 7
+ }
+]

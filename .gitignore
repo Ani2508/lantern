@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+build/
+dist/
+extras/
+
+# Local config and data
+.env
+.localstore/
+.aws-sam/
+web/fallback/plan.json
+
+# Node / dashboard
+node_modules/
+dashboard/dist/
+dashboard/.env.local
+*.tsbuildinfo
+
+# OS / editors
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

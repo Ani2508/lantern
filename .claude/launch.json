@@ -1,0 +1,20 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "dashboard",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["--prefix", "dashboard", "run", "dev"],
+      "port": 5173
+    },
+    {
+      "name": "dashboard-live",
+      "runtimeExecutable": "cmd",
+      "runtimeArgs": [
+        "/c",
+        "set VITE_USE_MOCKS=false&& set VITE_API_PROXY=http://localhost:8002&& npm --prefix dashboard run dev -- --port 5180 --strictPort"
+      ],
+      "port": 5180
+    }
+  ]
+}

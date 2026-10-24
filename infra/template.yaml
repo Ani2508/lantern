@@ -1,0 +1,269 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Lantern API (single container Lambda) plus data, web, gate-log and alerts.
+
+Parameters:
+  LanternEnv:
+    Type: String
+    Default: dev
+  AlertEmail:
+    Type: String
+    Default: ""
+  UseCloudFront:
+    Type: String
+    Default: "true"
+    AllowedValues: ["true", "false"]
+  BedrockEnabled:
+    Type: String
+    Default: "false"
+  NotifyEnabled:
+    Type: String
+    Default: "false"
+  BedrockModelId:
+    Type: String
+    Default: "us.anthropic.claude-haiku-4-5-20251001-v1:0"
+  BedrockFallbackModelId:
+    Type: String
+    Default: "us.amazon.nova-lite-v1:0"
+
+Conditions:
+  HasAlertEmail: !Not [!Equals [!Ref AlertEmail, ""]]
+  UseCloudFrontEnabled: !Equals [!Ref UseCloudFront, "true"]
+
+Resources:
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "lantern-${LanternEnv}-data-${AWS::AccountId}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  WebBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "lantern-${LanternEnv}-web-${AWS::AccountId}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+
+  SitesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "lantern-${LanternEnv}-sites"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: scenario_id, AttributeType: S }
+        - { AttributeName: site_id, AttributeType: S }
+      KeySchema:
+        - { AttributeName: scenario_id, KeyType: HASH }
+        - { AttributeName: site_id, KeyType: RANGE }
+
+  InventoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "lantern-${LanternEnv}-inventory"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: scenario_id, AttributeType: S }
+        - { AttributeName: site_supply, AttributeType: S }
+      KeySchema:
+        - { AttributeName: scenario_id, KeyType: HASH }
+        - { AttributeName: site_supply, KeyType: RANGE }
+
+  PlansTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "lantern-${LanternEnv}-plans"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: scenario_id, AttributeType: S }
+        - { AttributeName: plan_id, AttributeType: S }
+      KeySchema:
+        - { AttributeName: scenario_id, KeyType: HASH }
+        - { AttributeName: plan_id, KeyType: RANGE }
+
+  GateLogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub "lantern-${LanternEnv}-gate-log"
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: session_id, AttributeType: S }
+        - { AttributeName: transfer_id, AttributeType: S }
+      KeySchema:
+        - { AttributeName: session_id, KeyType: HASH }
+        - { AttributeName: transfer_id, KeyType: RANGE }
+
+  AlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: !Sub "lantern-${LanternEnv}-alerts"
+
+  AlertSubscription:
+    Type: AWS::SNS::Subscription
+    Condition: HasAlertEmail
+    Properties:
+      TopicArn: !Ref AlertsTopic
+      Protocol: email
+      Endpoint: !Ref AlertEmail
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub "lantern-${LanternEnv}-api"
+      PackageType: Image
+      MemorySize: 1536
+      Timeout: 60
+      Architectures: [x86_64]
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins: ["*"]
+          AllowMethods: ["*"]
+          AllowHeaders: ["*"]
+      Environment:
+        Variables:
+          LANTERN_ENV: !Ref LanternEnv
+          LANTERN_MODE: aws
+          AWS_REGION: !Ref AWS::Region
+          ACCOUNT_ID: !Ref AWS::AccountId
+          PREFIX: !Sub "lantern-${LanternEnv}"
+          DATA_BUCKET: !Ref DataBucket
+          WEB_BUCKET: !Ref WebBucket
+          TABLE_SITES: !Ref SitesTable
+          TABLE_INVENTORY: !Ref InventoryTable
+          TABLE_PLANS: !Ref PlansTable
+          TABLE_GATE_LOG: !Ref GateLogTable
+          SNS_TOPIC_ARN: !Ref AlertsTopic
+          BEDROCK_ENABLED: !Ref BedrockEnabled
+          BEDROCK_MODEL_ID: !Ref BedrockModelId
+          BEDROCK_FALLBACK_MODEL_ID: !Ref BedrockFallbackModelId
+          NOTIFY_ENABLED: !Ref NotifyEnabled
+          FORECASTER_MODE: heuristic
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action: [s3:GetObject, s3:PutObject, s3:ListBucket]
+              Resource:
+                - !Sub "${DataBucket.Arn}"
+                - !Sub "${DataBucket.Arn}/*"
+                - !Sub "${WebBucket.Arn}"
+                - !Sub "${WebBucket.Arn}/*"
+            - Effect: Allow
+              Action: [dynamodb:GetItem, dynamodb:PutItem, dynamodb:Query, dynamodb:BatchWriteItem]
+              Resource:
+                - !GetAtt SitesTable.Arn
+                - !GetAtt InventoryTable.Arn
+                - !GetAtt PlansTable.Arn
+                - !GetAtt GateLogTable.Arn
+            - Effect: Allow
+              Action: [sns:Publish]
+              Resource: !Ref AlertsTopic
+            - Effect: Allow
+              Action: [bedrock:InvokeModel, bedrock:Converse]
+              Resource:
+                - !Sub "arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/${BedrockModelId}"
+                - !Sub "arn:aws:bedrock:${AWS::Region}:${AWS::AccountId}:inference-profile/${BedrockFallbackModelId}"
+                - "arn:aws:bedrock:*::foundation-model/*"
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ..
+      DockerTag: lantern-api
+
+  ApiLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub "/aws/lambda/lantern-${LanternEnv}-api"
+      RetentionInDays: 7
+
+  WebOAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Condition: UseCloudFrontEnabled
+    Properties:
+      OriginAccessControlConfig:
+        Name: !Sub "lantern-${LanternEnv}-web-oac"
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  WebDistribution:
+    Type: AWS::CloudFront::Distribution
+    Condition: UseCloudFrontEnabled
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        Origins:
+          - Id: web
+            DomainName: !GetAtt WebBucket.RegionalDomainName
+            OriginAccessControlId: !Ref WebOAC
+            S3OriginConfig:
+              OriginAccessIdentity: ""
+          - Id: api
+            DomainName: !Select [2, !Split ["/", !GetAtt ApiFunctionUrl.FunctionUrl]]
+            CustomOriginConfig:
+              OriginProtocolPolicy: https-only
+              HTTPSPort: 443
+        DefaultCacheBehavior:
+          TargetOriginId: web
+          ViewerProtocolPolicy: redirect-to-https
+          AllowedMethods: [GET, HEAD]
+          CachedMethods: [GET, HEAD]
+          ForwardedValues:
+            QueryString: false
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: api
+            ViewerProtocolPolicy: https-only
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+            CachedMethods: [GET, HEAD]
+            ForwardedValues:
+              QueryString: true
+              Headers: [Authorization, Content-Type]
+            DefaultTTL: 0
+            MaxTTL: 0
+          - PathPattern: /fallback/*
+            TargetOriginId: web
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD]
+            DefaultTTL: 30
+            MaxTTL: 30
+            ForwardedValues:
+              QueryString: false
+
+  WebBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Condition: UseCloudFrontEnabled
+    Properties:
+      Bucket: !Ref WebBucket
+      PolicyDocument:
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudfront.amazonaws.com
+            Action: s3:GetObject
+            Resource: !Sub "${WebBucket.Arn}/*"
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub "arn:aws:cloudfront::${AWS::AccountId}:distribution/${WebDistribution}"
+
+Outputs:
+  ApiUrl:
+    Value: !GetAtt ApiFunctionUrl.FunctionUrl
+  CloudFrontUrl:
+    Condition: UseCloudFrontEnabled
+    Value: !Sub "https://${WebDistribution.DomainName}"
+  DataBucketName:
+    Value: !Ref DataBucket
+  WebBucketName:
+    Value: !Ref WebBucket
+  AlertsTopicArn:
+    Value: !Ref AlertsTopic

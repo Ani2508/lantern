@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lantern"
+version = "0.1.0"
+description = "Lantern: supply planning that keeps working when disaster data goes stale (SpartHill Hacks 2026, AWS track)"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.7",
+    "pydantic-settings>=2.7",
+    "boto3>=1.34",
+    "python-dotenv>=1.0",
+    "pandas>=2.1",
+    "numpy>=1.26",
+    "scikit-learn>=1.4",
+    "fastapi>=0.110",
+    "mangum>=0.17",
+    "uvicorn>=0.29",
+    "xgboost-cpu>=2.0; sys_platform == 'linux'",
+    "xgboost>=2.0; sys_platform != 'linux'",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "ruff>=0.4",
+    "moto[s3,dynamodb,sns]>=5",
+    "httpx>=0.27",
+]
+
+[tool.setuptools.packages.find]
+include = [
+    "lantern_core*",
+    "api*",
+    "simulator*",
+    "ingest*",
+    "baselines*",
+    "eval*",
+    "engine*",
+    "models*",
+    "gate*",
+    "explain*",
+    "alerts*",
+]
+
+[tool.setuptools.package-data]
+simulator = ["reference/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["dashboard", ".localstore", ".venv", "web", "extras"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+ignore = ["E501", "B008"]

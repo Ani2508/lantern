@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 800" width="1000" height="800">
+  <rect width="1000" height="800" fill="#e7efe3"/>
+  <path d="M0 520 C 180 480, 260 560, 400 540 C 560 520, 640 600, 1000 560 L 1000 800 L 0 800 Z" fill="#d7e4c8"/>
+  <path d="M40 40 C 200 80, 260 20, 420 90 C 600 160, 720 40, 960 120 L 980 0 L 0 0 Z" fill="#c9b48a"/>
+  <path d="M120 120 C 220 200, 180 260, 300 320 C 420 380, 360 460, 480 520" fill="none" stroke="#8d6e4a" stroke-width="18" stroke-linecap="round"/>
+  <path d="M0 300 C 220 280, 480 360, 1000 250" fill="none" stroke="#7eb0d4" stroke-width="14"/>
+  <path d="M80 700 L 920 80" fill="none" stroke="#c5b79a" stroke-width="8"/>
+  <path d="M200 40 L 260 760" fill="none" stroke="#c5b79a" stroke-width="6"/>
+  <text x="40" y="40" fill="#5a4a32" font-family="Inter, sans-serif" font-size="22">Fictional county (synthetic)</text>
+</svg>
