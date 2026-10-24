@@ -143,8 +143,13 @@ def state(scenario_id: str):
     inventory = store.query_pk(settings.table_inventory, scenario_id)
     if not sites:
         raise HTTPException(404, f"not_found: reset {scenario_id} first")
+    # always return current estimates (ingest only writes report fields; plans may be older)
+    from engine.estimator import estimate
+    from lantern_core.schemas import InventoryState
+
+    estimated = [r.to_item() for r in estimate([InventoryState(**r) for r in inventory])]
     return {"sim_hour": max((int(r["sim_hour"]) for r in inventory), default=0),
-            "sites": sites, "inventory": inventory}
+            "sites": sites, "inventory": estimated}
 
 
 @api.post("/scenarios/{scenario_id}/plan")

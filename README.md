@@ -44,7 +44,8 @@ Files marked `DRAFT by M3 for <owner> review` were written ahead for that owner:
 | `features.csv` builder, evaluation + metrics, sensitivity | M2 | working (draft); full run ~6-7 min |
 | Estimator, forecaster, optimizer (lantern + naive), scouts, `run_plan`, handler | M3 | working |
 | Gate R1-R5 + gate log, Bedrock explain with template fallback, SNS, fallback page | M4 | working locally (draft); Bedrock/SNS untested until deploy |
-| Dashboard and presentation | M5 | not started |
+| Dashboard (`dashboard/`): night map, timeline, gate moment, results, offline view, auto-play story | M5 | working on offline demo data and live API (built by M3) |
+| Presentation, video | M5 | not started |
 
 ## Typical flow
 
@@ -54,6 +55,7 @@ make features train      # 200 train + 60 test scenarios -> forecaster (~1 min)
 make eval SEEDS=3        # quick proof chart; plain `make eval` = 20 seeds
 make api                 # http://localhost:8000/api/health
 make fallback            # http://localhost:8080 - the page that survives the API going down
+make dashboard           # http://localhost:5173  (?record=1 plays the story for the video)
 ```
 
 ## Rules

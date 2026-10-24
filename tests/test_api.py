@@ -20,6 +20,8 @@ def test_demo_flow():
     assert client.post(f"/api/scenarios/{SID}/step", json={"to_hour": 9}).json() == {"sim_hour": 9}
     state = client.get(f"/api/scenarios/{SID}/state").json()
     assert state["sim_hour"] == 9 and len(state["sites"]) == 5
+    s04 = next(r for r in state["inventory"] if r["site_supply"] == "S04#insulin")
+    assert round(s04["est_qty_p05"], 2) == 21.14  # estimates included for the dashboard
 
     naive = client.post(f"/api/scenarios/{SID}/plan", json={"planner": "naive", "apply_gate": True}).json()
     assert naive["counts"]["block"] >= 1

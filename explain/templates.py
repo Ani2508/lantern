@@ -10,7 +10,9 @@ from lantern_core.schemas import SUPPLIES, Plan, Transfer
 
 
 def _q(x: float) -> str:
-    return f"{x:,.0f}" if abs(x) >= 10 else f"{x:,.1f}".rstrip("0").rstrip(".")
+    if abs(x) >= 100:
+        return f"{x:,.0f}"
+    return f"{x:,.1f}".rstrip("0").rstrip(".")
 
 
 def reason_text(

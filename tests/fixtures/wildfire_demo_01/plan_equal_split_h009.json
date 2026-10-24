@@ -1,0 +1,183 @@
+{
+ "scenario_id": "wildfire_demo_01",
+ "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+ "session_id": "sess_wildfire_demo_01_equal_split_20261107T170000",
+ "planner": "equal_split",
+ "sim_hour": 9,
+ "data_loss_pct": 40.0,
+ "apply_gate": true,
+ "transfers": [
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t01",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "food",
+   "qty": 4103.0,
+   "priority_rank": 1,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 4,103 meals of food from County Food Bank to Shelter A (12.5 km). Approved; it keeps a safe reserve at County Food Bank."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t02",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S04",
+   "supply_id": "food",
+   "qty": 1895.0,
+   "priority_rank": 2,
+   "distance_km": 6.1,
+   "decision": "BLOCK",
+   "rule_hits": [
+    "R4_SESSION_DRAW"
+   ],
+   "reason_text": "2 transfers from County Food Bank would draw 5,998 meals, over this session's limit of 5,319.",
+   "explanation_text": "Move 1,895 meals of food from County Food Bank to Central Pharmacy (6.1 km). Blocked: 2 transfers from County Food Bank would draw 5,998 meals, over this session's limit of 5,319."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t03",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S02",
+   "supply_id": "food",
+   "qty": 970.0,
+   "priority_rank": 3,
+   "distance_km": 12.2,
+   "decision": "REVIEW",
+   "rule_hits": [
+    "R4_SESSION_DRAW"
+   ],
+   "reason_text": "2 transfers from County Food Bank draw 5,073 meals, close to this session's limit of 5,319.",
+   "explanation_text": "Move 970 meals of food from County Food Bank to Shelter B (12.2 km). Needs a person to check: 2 transfers from County Food Bank draw 5,073 meals, close to this session's limit of 5,319."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t04",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S03",
+   "supply_id": "food",
+   "qty": 381.0,
+   "priority_rank": 4,
+   "distance_km": 6.2,
+   "decision": "BLOCK",
+   "rule_hits": [
+    "R4_SESSION_DRAW"
+   ],
+   "reason_text": "3 transfers from County Food Bank would draw 5,454 meals, over this session's limit of 5,319.",
+   "explanation_text": "Move 381 meals of food from County Food Bank to Riverside Clinic (6.2 km). Blocked: 3 transfers from County Food Bank would draw 5,454 meals, over this session's limit of 5,319."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t05",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 22.0,
+   "priority_rank": 5,
+   "distance_km": 6.7,
+   "decision": "BLOCK",
+   "rule_hits": [
+    "R1_SOURCE_RESERVE",
+    "R3_MAX_SIZE",
+    "R4_SESSION_DRAW",
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "1 transfers from Central Pharmacy together would leave insulin below its 72 h reserve. This load is more than half of what Central Pharmacy may have left. Central Pharmacy data is 7 h old.",
+   "explanation_text": "Move 22 vials of insulin from Central Pharmacy to Shelter A (6.7 km). Blocked: 1 transfers from Central Pharmacy together would leave insulin below its 72 h reserve. This load is more than half of what Central Pharmacy may have left. Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t06",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S02",
+   "supply_id": "insulin",
+   "qty": 10.0,
+   "priority_rank": 6,
+   "distance_km": 6.2,
+   "decision": "REVIEW",
+   "rule_hits": [
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "Central Pharmacy data is 7 h old.",
+   "explanation_text": "Move 10 vials of insulin from Central Pharmacy to Shelter B (6.2 km). Needs a person to check: Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t07",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S05",
+   "supply_id": "insulin",
+   "qty": 1.0,
+   "priority_rank": 7,
+   "distance_km": 6.1,
+   "decision": "REVIEW",
+   "rule_hits": [
+    "R4_SESSION_DRAW",
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "2 transfers from Central Pharmacy draw 11 vials, close to this session's limit of 12.7. Central Pharmacy data is 7 h old.",
+   "explanation_text": "Move 1 vials of insulin from Central Pharmacy to County Food Bank (6.1 km). Needs a person to check: 2 transfers from Central Pharmacy draw 11 vials, close to this session's limit of 12.7. Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t08",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S03",
+   "dest_site_id": "S05",
+   "supply_id": "insulin",
+   "qty": 5.0,
+   "priority_rank": 8,
+   "distance_km": 6.2,
+   "decision": "BLOCK",
+   "rule_hits": [
+    "R3_MAX_SIZE",
+    "R4_SESSION_DRAW"
+   ],
+   "reason_text": "1 transfers from Riverside Clinic would draw 5 vials, over this session's limit of 5.8. This load is more than half of what Riverside Clinic may have left.",
+   "explanation_text": "Move 5 vials of insulin from Riverside Clinic to County Food Bank (6.2 km). Blocked: 1 transfers from Riverside Clinic would draw 5 vials, over this session's limit of 5.8. This load is more than half of what Riverside Clinic may have left."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t09",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "water",
+   "qty": 1498.0,
+   "priority_rank": 9,
+   "distance_km": 12.5,
+   "decision": "BLOCK",
+   "rule_hits": [
+    "R3_MAX_SIZE",
+    "R4_SESSION_DRAW"
+   ],
+   "reason_text": "1 transfers from County Food Bank would draw 1,498 gallons, over this session's limit of 1,773. This load is more than half of what County Food Bank may have left.",
+   "explanation_text": "Move 1,498 gallons of water from County Food Bank to Shelter A (12.5 km). Blocked: 1 transfers from County Food Bank would draw 1,498 gallons, over this session's limit of 1,773. This load is more than half of what County Food Bank may have left."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_equal_split_h009_t10",
+   "plan_id": "plan_wildfire_demo_01_equal_split_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S02",
+   "supply_id": "water",
+   "qty": 389.0,
+   "priority_rank": 10,
+   "distance_km": 12.2,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 389 gallons of water from County Food Bank to Shelter B (12.2 km). Approved; it keeps a safe reserve at County Food Bank."
+  }
+ ],
+ "scouts": [],
+ "counts": {
+  "approve": 2,
+  "review": 3,
+  "block": 5
+ },
+ "summary_text": "Hour 9: 10 transfers (2 approved, 3 for review, 5 blocked). 40% of sites have no live data.",
+ "explanation_source": "template",
+ "runtime_ms": 850,
+ "created_at": "2026-11-07T17:00:05Z"
+}

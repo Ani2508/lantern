@@ -18,7 +18,8 @@
    "distance_km": 6.9,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 4 vials of insulin from Riverside Clinic to Shelter B (6.9 km). Approved; it keeps a safe reserve at Riverside Clinic."
   },
   {
    "transfer_id": "plan_wildfire_demo_01_lantern_h009_t02",
@@ -31,7 +32,8 @@
    "distance_km": 12.2,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 1,289 meals of food from County Food Bank to Shelter B (12.2 km). Approved; it keeps a safe reserve at County Food Bank."
   },
   {
    "transfer_id": "plan_wildfire_demo_01_lantern_h009_t03",
@@ -44,7 +46,8 @@
    "distance_km": 12.2,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 430 gallons of water from County Food Bank to Shelter B (12.2 km). Approved; it keeps a safe reserve at County Food Bank."
   },
   {
    "transfer_id": "plan_wildfire_demo_01_lantern_h009_t04",
@@ -57,7 +60,8 @@
    "distance_km": 12.5,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 1,500 meals of food from County Food Bank to Shelter A (12.5 km). Approved; it keeps a safe reserve at County Food Bank."
   },
   {
    "transfer_id": "plan_wildfire_demo_01_lantern_h009_t05",
@@ -70,7 +74,8 @@
    "distance_km": 12.5,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 788 meals of food from County Food Bank to Shelter A (12.5 km). Approved; it keeps a safe reserve at County Food Bank."
   },
   {
    "transfer_id": "plan_wildfire_demo_01_lantern_h009_t06",
@@ -83,7 +88,8 @@
    "distance_km": 12.5,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 500 gallons of water from County Food Bank to Shelter A (12.5 km). Approved; it keeps a safe reserve at County Food Bank."
   },
   {
    "transfer_id": "plan_wildfire_demo_01_lantern_h009_t07",
@@ -96,7 +102,8 @@
    "distance_km": 12.5,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 263 gallons of water from County Food Bank to Shelter A (12.5 km). Approved; it keeps a safe reserve at County Food Bank."
   },
   {
    "transfer_id": "plan_wildfire_demo_01_lantern_h009_t08",
@@ -109,7 +116,8 @@
    "distance_km": 6.2,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 90 meals of food from County Food Bank to Riverside Clinic (6.2 km). Approved; it keeps a safe reserve at County Food Bank."
   },
   {
    "transfer_id": "plan_wildfire_demo_01_lantern_h009_t09",
@@ -122,7 +130,8 @@
    "distance_km": 6.2,
    "decision": "APPROVE",
    "rule_hits": [],
-   "reason_text": "All checks passed."
+   "reason_text": "All safety checks passed.",
+   "explanation_text": "Move 30 gallons of water from County Food Bank to Riverside Clinic (6.2 km). Approved; it keeps a safe reserve at County Food Bank."
   }
  ],
  "scouts": [
@@ -152,7 +161,7 @@
   "review": 0,
   "block": 0
  },
- "summary_text": "Hour 9: 9 transfers (9 approved, 0 for review, 0 blocked). Scout: S02, S04.",
+ "summary_text": "Hour 9: 9 transfers (9 approved, 0 for review, 0 blocked). 40% of sites have no live data. Send a scout to S02, S04 for a fresh count.",
  "explanation_source": "template",
  "runtime_ms": 850,
  "created_at": "2026-11-07T17:00:05Z"
