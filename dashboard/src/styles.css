@@ -262,22 +262,31 @@ button:disabled { cursor: not-allowed; opacity: 0.45; }
 /* record mode: clean frame for the video */
 .record, .record * { cursor: none !important; }
 
-/* smaller screens: stack the rail under the map */
+/* smaller screens: one scrolling column (map, plan, stock) */
 @media (max-width: 1100px) {
+  .app { height: auto; min-height: 100%; grid-template-rows: none; }
   .stage { grid-template-columns: 1fr; }
-  .map-wrap { height: 58vh; }
-  .rail { border-left: 0; border-top: 1px solid var(--line); }
+  .map-wrap { height: auto; display: flex; flex-direction: column; }
+  .map { height: auto; aspect-ratio: 1000 / 640; }
+  .legend { position: static; order: -1; flex-wrap: wrap; gap: 10px; padding: 10px 16px 0; }
+  .dock { position: static; flex-wrap: wrap; gap: 6px; padding: 8px 16px 12px; }
+  .dock button { padding: 5px 10px; font-size: 12px; }
+  .caption { position: static; margin: 0 16px 12px; }
+  .rail { border-left: 0; border-top: 1px solid var(--line); overflow: visible; }
   .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .story-nav ol, .health { display: none; }
-  .dock { top: auto; bottom: 12px; right: 12px; }
-  .caption { position: absolute; right: 16px; bottom: 16px; left: 16px; }
 }
 @media (max-width: 640px) {
-  .top { flex-wrap: wrap; gap: 12px; padding: 10px 16px; }
-  .timeline { padding: 8px 16px; }
-  .event em { display: none; }
+  .top { flex-wrap: wrap; gap: 10px 14px; padding: 10px 16px; }
+  .story-nav { margin-left: 0; }
+  .timeline { padding: 18px 16px 20px; gap: 10px; }
+  .timeline .ends, .event em { display: none; }
   .strip { grid-template-columns: 1fr; }
+  .stock { border-right: 0; border-bottom: 1px solid var(--line); }
   .caption p { font-size: 15px; }
+  .caption-speaker { display: none; }
+  .run-buttons { grid-template-columns: 1fr; }
+  .run-btn.lantern { grid-column: auto; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 1ms !important; animation-iteration-count: 1 !important; transition-duration: 1ms !important; }
