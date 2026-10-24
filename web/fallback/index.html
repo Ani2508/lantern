@@ -1,0 +1,65 @@
+<!doctype html>
+<!-- Lantern fallback page. OWNER: M4. DRAFT by M3 for M4 review.
+     Static, no build step, no API calls: reads plan.json from this folder,
+     so it still works when the main app is switched off (demo step 7). -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lantern · Latest plan</title>
+<style>
+  :root { --gold:#F2A900; --ink:#1B1F24; --paper:#FAF7F0; --approve:#2E7D32; --review:#EF6C00; --block:#C62828; --stale:#9E9E9E; --muted:#5b6370; --line:#e4dfd3; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--paper); color:var(--ink); font:16px/1.45 Inter, system-ui, -apple-system, sans-serif; }
+  .banner { background:var(--ink); color:#fff; text-align:center; padding:8px 16px; font-size:13px; letter-spacing:.02em; }
+  header { display:flex; align-items:center; gap:12px; padding:16px; border-bottom:1px solid var(--line); }
+  .logo { width:28px; height:28px; border-radius:6px; background:var(--gold); }
+  h1 { font-size:20px; margin:0; }
+  main { max-width:760px; margin:0 auto; padding:16px; }
+  .meta { color:var(--muted); font-size:14px; margin:0 0 12px; }
+  .summary { background:#fff; border:1px solid var(--line); border-radius:10px; padding:12px 14px; margin-bottom:16px; }
+  h2 { font-size:16px; margin:20px 0 8px; }
+  .row { background:#fff; border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; }
+  .row .top { display:flex; justify-content:space-between; gap:8px; align-items:baseline; flex-wrap:wrap; }
+  .what { font-weight:600; }
+  .chip { font:600 12px/1 "JetBrains Mono", ui-monospace, monospace; color:#fff; padding:4px 8px; border-radius:999px; }
+  .APPROVE { background:var(--approve); } .REVIEW { background:var(--review); } .BLOCK { background:var(--block); }
+  .why { color:var(--muted); font-size:14px; margin-top:4px; }
+  .num { font-family:"JetBrains Mono", ui-monospace, monospace; }
+  .err { color:var(--block); }
+</style>
+</head>
+<body>
+<div class="banner">SIMULATED DATA · synthetic scenario for demonstration only</div>
+<header><div class="logo" aria-hidden="true"></div><h1>Lantern · latest plan</h1></header>
+<main>
+  <p class="meta" id="meta">Loading…</p>
+  <div class="summary" id="summary"></div>
+  <h2>Transfers</h2>
+  <div id="transfers"></div>
+  <h2>Scout visits</h2>
+  <div id="scouts"></div>
+</main>
+<script>
+  const el = (id) => document.getElementById(id);
+  const esc = (s) => String(s ?? "").replace(/[&<>"]/g, (c) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+  fetch("plan.json", { cache: "no-store" })
+    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then((p) => {
+      const n = p.site_names || {};
+      const name = (id) => esc(n[id] || id);
+      const c = p.counts || {};
+      el("meta").textContent = `Hour ${p.sim_hour} · ${p.data_loss_pct}% of sites without live data · updated ${new Date(p.created_at).toLocaleString()}`;
+      el("summary").innerHTML = `${esc(p.summary_text)}<div class="why">${c.approve||0} approved · ${c.review||0} for review · ${c.block||0} blocked</div>`;
+      el("transfers").innerHTML = (p.transfers || []).map((t) => `
+        <div class="row"><div class="top">
+          <span class="what"><span class="num">${esc(t.qty)}</span> ${esc(t.supply_id)}: ${name(t.source_site_id)} → ${name(t.dest_site_id)}</span>
+          <span class="chip ${esc(t.decision || "APPROVE")}">${esc(t.decision || "—")}</span></div>
+          <div class="why">${esc(t.explanation_text || t.reason_text || "")}</div></div>`).join("") || "<p>No transfers.</p>";
+      el("scouts").innerHTML = (p.scouts || []).map((s) => `
+        <div class="row"><div class="what">${name(s.site_id)}</div><div class="why">${esc(s.reason_text)}</div></div>`).join("") || "<p>No scout visits.</p>";
+    })
+    .catch(() => { el("meta").innerHTML = '<span class="err">No plan published yet.</span>'; });
+</script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S01", "supply_id": "water", "qty": 862.5, "people_served": 500}
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S01", "supply_id": "food", "qty": 2587.5, "people_served": 500}
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S01", "supply_id": "insulin", "qty": 3.62, "people_served": 500}
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S03", "supply_id": "water", "qty": 230.0, "people_served": 80}
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S03", "supply_id": "food", "qty": 690.0, "people_served": 80}
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S03", "supply_id": "insulin", "qty": 9.9, "people_served": 80}
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S05", "supply_id": "water", "qty": 2985.0, "people_served": 120}
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S05", "supply_id": "food", "qty": 8955.0, "people_served": 120}
+{"scenario_id": "wildfire_demo_01", "sim_hour": 3, "site_id": "S05", "supply_id": "insulin", "qty": 0.0, "people_served": 120}

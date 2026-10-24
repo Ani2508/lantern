@@ -1,0 +1,24 @@
+# Replace each placeholder with the member's GitHub username (keep the @).
+# M1 Platform & Infrastructure
+/infra/          @M1_GITHUB_USERNAME
+/lantern_core/   @M1_GITHUB_USERNAME
+/api/            @M1_GITHUB_USERNAME
+/scripts/        @M1_GITHUB_USERNAME
+/.github/        @M1_GITHUB_USERNAME
+# M2 Data, Simulator & Evaluation
+/simulator/      @M2_GITHUB_USERNAME
+/ingest/         @M2_GITHUB_USERNAME
+/baselines/      @M2_GITHUB_USERNAME
+/eval/           @M2_GITHUB_USERNAME
+/tests/fixtures/ @M2_GITHUB_USERNAME
+# M3 Forecast & Decision Engine
+/engine/         @M3_GITHUB_USERNAME
+/models/         @M3_GITHUB_USERNAME
+# M4 Safety Gate, Bedrock & Alerts
+/gate/           @M4_GITHUB_USERNAME
+/explain/        @M4_GITHUB_USERNAME
+/alerts/         @M4_GITHUB_USERNAME
+/web/fallback/   @M4_GITHUB_USERNAME
+# M5 Dashboard, Demo & Presentation
+/dashboard/      @M5_GITHUB_USERNAME
+/presentation/   @M5_GITHUB_USERNAME

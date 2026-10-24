@@ -1,0 +1,159 @@
+{
+ "scenario_id": "wildfire_demo_01",
+ "plan_id": "plan_wildfire_demo_01_lantern_h009",
+ "session_id": "sess_wildfire_demo_01_lantern_20261107T170000",
+ "planner": "lantern",
+ "sim_hour": 9,
+ "data_loss_pct": 40.0,
+ "apply_gate": true,
+ "transfers": [
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t01",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S03",
+   "dest_site_id": "S02",
+   "supply_id": "insulin",
+   "qty": 4.0,
+   "priority_rank": 1,
+   "distance_km": 6.9,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t02",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S02",
+   "supply_id": "food",
+   "qty": 1289.0,
+   "priority_rank": 2,
+   "distance_km": 12.2,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t03",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S02",
+   "supply_id": "water",
+   "qty": 430.0,
+   "priority_rank": 3,
+   "distance_km": 12.2,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t04",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "food",
+   "qty": 1500.0,
+   "priority_rank": 4,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t05",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "food",
+   "qty": 788.0,
+   "priority_rank": 5,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t06",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "water",
+   "qty": 500.0,
+   "priority_rank": 6,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t07",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "water",
+   "qty": 263.0,
+   "priority_rank": 7,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t08",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S03",
+   "supply_id": "food",
+   "qty": 90.0,
+   "priority_rank": 8,
+   "distance_km": 6.2,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_lantern_h009_t09",
+   "plan_id": "plan_wildfire_demo_01_lantern_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S03",
+   "supply_id": "water",
+   "qty": 30.0,
+   "priority_rank": 9,
+   "distance_km": 6.2,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  }
+ ],
+ "scouts": [
+  {
+   "scout_id": "plan_wildfire_demo_01_lantern_h009_s01",
+   "site_id": "S02",
+   "supply_ids": [
+    "insulin",
+    "food",
+    "water"
+   ],
+   "voi_score": 1.0,
+   "reason_text": "Insulin at Shelter B: last count 2 vials, 7 h old; now somewhere between 0 and 2. A fresh count shows whether it needs a delivery."
+  },
+  {
+   "scout_id": "plan_wildfire_demo_01_lantern_h009_s02",
+   "site_id": "S04",
+   "supply_ids": [
+    "insulin"
+   ],
+   "voi_score": 1.0,
+   "reason_text": "Insulin at Central Pharmacy: last count 40 vials, 7 h old; now somewhere between 21 and 58. A fresh count could free stock for sites that are short."
+  }
+ ],
+ "counts": {
+  "approve": 9,
+  "review": 0,
+  "block": 0
+ },
+ "summary_text": "Hour 9: 9 transfers (9 approved, 0 for review, 0 blocked). Scout: S02, S04.",
+ "explanation_source": "template",
+ "runtime_ms": 850,
+ "created_at": "2026-11-07T17:00:05Z"
+}

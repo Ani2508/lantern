@@ -1,0 +1,25 @@
+# secrets and local state
+.env
+.localstore/
+.aws-sam/
+.build/
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+
+# node
+node_modules/
+dashboard/dist/
+
+# models are stored in S3, not git
+models/**/*.json
+!models/**/schema*.json
+
+# os / editors
+.DS_Store
+.idea/

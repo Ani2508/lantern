@@ -1,0 +1,7 @@
+.venv
+.git
+.localstore
+.aws-sam
+.build
+dashboard/node_modules
+**/__pycache__

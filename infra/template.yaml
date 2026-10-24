@@ -1,0 +1,275 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  Lantern (SparthHill Hack 2026) - contract 2.4 / 2.6 / 2.10.
+  OWNER: M1. DRAFT by M3 for M1 review. Deploy only via `make deploy`.
+  If the event account blocks CloudFront, SAM or SMS, see infra/README.md for fallbacks.
+
+Parameters:
+  BedrockModelId:
+    Type: String
+    Default: ""
+    Description: Exact Bedrock model id (M4). Empty = template explanations only.
+  FallbackUrl:
+    Type: String
+    Default: ""
+    Description: Public URL of the fallback page, appended to SMS. Fill after first deploy.
+
+Globals:
+  Function:
+    Architectures: [arm64]
+    Timeout: 60
+    MemorySize: 512
+    Environment:
+      Variables:
+        LANTERN_ENV: dev
+        LANTERN_MODE: aws
+        PREFIX: lantern-dev
+        ACCOUNT_ID: !Ref AWS::AccountId
+        DATA_BUCKET: !Ref DataBucket
+        WEB_BUCKET: !Ref WebBucket
+        TABLE_SITES: !Ref SitesTable
+        TABLE_INVENTORY: !Ref InventoryTable
+        TABLE_PLANS: !Ref PlansTable
+        TABLE_GATE_LOG: !Ref GateLogTable
+        FN_SIMULATE: lantern-dev-simulate
+        FN_INGEST: lantern-dev-ingest
+        FN_PLAN: lantern-dev-plan
+        SNS_TOPIC_ARN: !Ref AlertsTopic
+        BEDROCK_ENABLED: "true"
+        BEDROCK_MODEL_ID: !Ref BedrockModelId
+        BEDROCK_TIMEOUT_S: "8"
+        NOTIFY_ENABLED: "true"
+        FALLBACK_URL: !Ref FallbackUrl
+        FORECASTER_MODEL_KEY: models/forecaster/v1/model.json
+        SIM_START_TS: "2026-11-07T08:00:00Z"
+
+Resources:
+  # ---------------- storage ----------------
+  DataBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub lantern-dev-data-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  WebBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub lantern-dev-web-${AWS::AccountId}
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  WebBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref WebBucket
+      PolicyDocument:
+        Statement:
+          - Sid: CloudFrontReadOnly
+            Effect: Allow
+            Principal: { Service: cloudfront.amazonaws.com }
+            Action: s3:GetObject
+            Resource: !Sub ${WebBucket.Arn}/*
+            Condition:
+              StringEquals:
+                AWS:SourceArn: !Sub arn:aws:cloudfront::${AWS::AccountId}:distribution/${Distribution}
+
+  SitesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: lantern-dev-sites
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: scenario_id, AttributeType: S }
+        - { AttributeName: site_id, AttributeType: S }
+      KeySchema:
+        - { AttributeName: scenario_id, KeyType: HASH }
+        - { AttributeName: site_id, KeyType: RANGE }
+
+  InventoryTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: lantern-dev-inventory
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: scenario_id, AttributeType: S }
+        - { AttributeName: site_supply, AttributeType: S }
+      KeySchema:
+        - { AttributeName: scenario_id, KeyType: HASH }
+        - { AttributeName: site_supply, KeyType: RANGE }
+
+  PlansTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: lantern-dev-plans
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: scenario_id, AttributeType: S }
+        - { AttributeName: plan_id, AttributeType: S }
+      KeySchema:
+        - { AttributeName: scenario_id, KeyType: HASH }
+        - { AttributeName: plan_id, KeyType: RANGE }
+
+  GateLogTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: lantern-dev-gate-log
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - { AttributeName: session_id, AttributeType: S }
+        - { AttributeName: transfer_id, AttributeType: S }
+      KeySchema:
+        - { AttributeName: session_id, KeyType: HASH }
+        - { AttributeName: transfer_id, KeyType: RANGE }
+
+  AlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: lantern-dev-alerts
+
+  # ---------------- functions ----------------
+  SimulateFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: lantern-dev-simulate
+      Runtime: python3.12
+      CodeUri: ../.build/src
+      Handler: simulator.run.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy: { TableName: !Ref SitesTable }
+        - DynamoDBCrudPolicy: { TableName: !Ref InventoryTable }
+        - S3CrudPolicy: { BucketName: !Ref DataBucket }
+
+  IngestFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: lantern-dev-ingest
+      Runtime: python3.12
+      CodeUri: ../.build/src
+      Handler: ingest.handler.lambda_handler
+      Policies:
+        - DynamoDBCrudPolicy: { TableName: !Ref InventoryTable }
+        - S3CrudPolicy: { BucketName: !Ref DataBucket }
+
+  PlanFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: lantern-dev-plan
+      PackageType: Image
+      MemorySize: 1536
+      Policies:
+        - DynamoDBCrudPolicy: { TableName: !Ref SitesTable }
+        - DynamoDBCrudPolicy: { TableName: !Ref InventoryTable }
+        - DynamoDBCrudPolicy: { TableName: !Ref PlansTable }
+        - DynamoDBCrudPolicy: { TableName: !Ref GateLogTable }
+        - S3ReadPolicy: { BucketName: !Ref DataBucket }
+        - SNSPublishMessagePolicy: { TopicName: !GetAtt AlertsTopic.TopicName }
+        - Statement:
+            - Effect: Allow
+              Action: s3:PutObject
+              Resource: !Sub ${WebBucket.Arn}/fallback/*
+            - Effect: Allow
+              Action: [bedrock:InvokeModel, bedrock:Converse]
+              Resource: "*"
+    Metadata:
+      Dockerfile: engine/Dockerfile
+      DockerContext: ..
+      DockerTag: v1
+
+  ApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: lantern-dev-api
+      Runtime: python3.12
+      CodeUri: ../.build/src
+      Handler: api.app.handler
+      Environment:
+        Variables:
+          CORS_ORIGINS: "http://localhost:5173"   # add the CloudFront URL after first deploy
+      FunctionUrlConfig:
+        AuthType: NONE
+      Policies:
+        - DynamoDBReadPolicy: { TableName: !Ref SitesTable }
+        - DynamoDBReadPolicy: { TableName: !Ref InventoryTable }
+        - DynamoDBReadPolicy: { TableName: !Ref PlansTable }
+        - DynamoDBReadPolicy: { TableName: !Ref GateLogTable }
+        - S3CrudPolicy: { BucketName: !Ref DataBucket }
+        - LambdaInvokePolicy: { FunctionName: !Ref SimulateFunction }
+        - LambdaInvokePolicy: { FunctionName: !Ref PlanFunction }
+
+  # ---------------- CDN ----------------
+  WebOAC:
+    Type: AWS::CloudFront::OriginAccessControl
+    Properties:
+      OriginAccessControlConfig:
+        Name: lantern-dev-web-oac
+        OriginAccessControlOriginType: s3
+        SigningBehavior: always
+        SigningProtocol: sigv4
+
+  FallbackCachePolicy:
+    Type: AWS::CloudFront::CachePolicy
+    Properties:
+      CachePolicyConfig:
+        Name: lantern-dev-fallback-30s
+        DefaultTTL: 30
+        MaxTTL: 30
+        MinTTL: 0
+        ParametersInCacheKeyAndForwardedToOrigin:
+          EnableAcceptEncodingGzip: true
+          CookiesConfig: { CookieBehavior: none }
+          HeadersConfig: { HeaderBehavior: none }
+          QueryStringsConfig: { QueryStringBehavior: none }
+
+  Distribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        Comment: lantern-dev
+        DefaultRootObject: index.html
+        PriceClass: PriceClass_100
+        Origins:
+          - Id: web
+            DomainName: !GetAtt WebBucket.RegionalDomainName
+            OriginAccessControlId: !GetAtt WebOAC.Id
+            S3OriginConfig: { OriginAccessIdentity: "" }
+          - Id: api
+            DomainName: !Select [2, !Split ["/", !GetAtt ApiFunctionUrl.FunctionUrl]]
+            CustomOriginConfig: { OriginProtocolPolicy: https-only }
+        DefaultCacheBehavior:
+          TargetOriginId: web
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6   # Managed-CachingOptimized
+        CacheBehaviors:
+          - PathPattern: /api/*
+            TargetOriginId: api
+            ViewerProtocolPolicy: redirect-to-https
+            AllowedMethods: [GET, HEAD, OPTIONS, PUT, POST, PATCH, DELETE]
+            CachePolicyId: 4135ea2d-6df8-44a3-9df3-4b5a84be39ad   # Managed-CachingDisabled
+            OriginRequestPolicyId: b689b0a8-53d0-40ab-baf2-68738e2966ac   # Managed-AllViewerExceptHostHeader
+          - PathPattern: /fallback/*
+            TargetOriginId: web
+            ViewerProtocolPolicy: redirect-to-https
+            CachePolicyId: !Ref FallbackCachePolicy
+
+Outputs:
+  CloudFrontUrl:
+    Value: !Sub https://${Distribution.DomainName}
+  DistributionId:
+    Value: !Ref Distribution
+  ApiFunctionUrl:
+    Value: !GetAtt ApiFunctionUrl.FunctionUrl
+  DataBucketName:
+    Value: !Ref DataBucket
+  WebBucketName:
+    Value: !Ref WebBucket
+  AlertsTopicArn:
+    Value: !Ref AlertsTopic

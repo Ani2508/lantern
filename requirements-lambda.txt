@@ -1,0 +1,7 @@
+# Zip Lambdas (simulate, ingest, api). boto3 is in the runtime. The plan Lambda uses engine/Dockerfile.
+pydantic>=2.6
+pydantic-settings>=2.2
+python-dotenv>=1.0
+numpy>=1.26
+fastapi>=0.110
+mangum>=0.17

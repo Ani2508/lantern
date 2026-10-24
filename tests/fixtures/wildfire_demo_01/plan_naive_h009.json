@@ -1,0 +1,163 @@
+{
+ "scenario_id": "wildfire_demo_01",
+ "plan_id": "plan_wildfire_demo_01_naive_h009",
+ "session_id": "sess_wildfire_demo_01_naive_20261107T170000",
+ "planner": "naive",
+ "sim_hour": 9,
+ "data_loss_pct": 40.0,
+ "apply_gate": true,
+ "transfers": [
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t01",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 6.0,
+   "priority_rank": 1,
+   "distance_km": 6.7,
+   "decision": "REVIEW",
+   "rule_hits": [
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t02",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 6.0,
+   "priority_rank": 2,
+   "distance_km": 6.7,
+   "decision": "REVIEW",
+   "rule_hits": [
+    "R4_SESSION_DRAW",
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "2 transfers from Central Pharmacy are close to the session limit of 12.7 vials. Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t03",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S01",
+   "supply_id": "insulin",
+   "qty": 1.0,
+   "priority_rank": 3,
+   "distance_km": 6.7,
+   "decision": "BLOCK",
+   "rule_hits": [
+    "R4_SESSION_DRAW",
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "3 transfers from Central Pharmacy would draw 13 vials, over the session limit of 12.7. Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t04",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S04",
+   "dest_site_id": "S02",
+   "supply_id": "insulin",
+   "qty": 6.0,
+   "priority_rank": 4,
+   "distance_km": 6.2,
+   "decision": "BLOCK",
+   "rule_hits": [
+    "R1_SOURCE_RESERVE",
+    "R4_SESSION_DRAW",
+    "R5_STALE_SOURCE"
+   ],
+   "reason_text": "4 transfers from Central Pharmacy together would leave insulin below its 72 h reserve. 4 transfers from Central Pharmacy would draw 18 vials, over the session limit of 12.7. Central Pharmacy data is 7 h old."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t05",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "food",
+   "qty": 1500.0,
+   "priority_rank": 5,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t06",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "food",
+   "qty": 788.0,
+   "priority_rank": 6,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t07",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "water",
+   "qty": 500.0,
+   "priority_rank": 7,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t08",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S01",
+   "supply_id": "water",
+   "qty": 263.0,
+   "priority_rank": 8,
+   "distance_km": 12.5,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t09",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S03",
+   "supply_id": "food",
+   "qty": 90.0,
+   "priority_rank": 9,
+   "distance_km": 6.2,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  },
+  {
+   "transfer_id": "plan_wildfire_demo_01_naive_h009_t10",
+   "plan_id": "plan_wildfire_demo_01_naive_h009",
+   "source_site_id": "S05",
+   "dest_site_id": "S03",
+   "supply_id": "water",
+   "qty": 30.0,
+   "priority_rank": 10,
+   "distance_km": 6.2,
+   "decision": "APPROVE",
+   "rule_hits": [],
+   "reason_text": "All checks passed."
+  }
+ ],
+ "scouts": [],
+ "counts": {
+  "approve": 6,
+  "review": 2,
+  "block": 2
+ },
+ "summary_text": "Hour 9: 10 transfers (6 approved, 2 for review, 2 blocked).",
+ "explanation_source": "template",
+ "runtime_ms": 850,
+ "created_at": "2026-11-07T17:00:05Z"
+}

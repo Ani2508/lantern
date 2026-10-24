@@ -1,0 +1,10 @@
+{"sim_hour": 0, "temp_c": 24.0, "hazard_level": 0}
+{"sim_hour": 1, "temp_c": 25.5, "hazard_level": 0}
+{"sim_hour": 2, "temp_c": 27.0, "hazard_level": 2}
+{"sim_hour": 3, "temp_c": 28.5, "hazard_level": 2}
+{"sim_hour": 4, "temp_c": 30.0, "hazard_level": 2}
+{"sim_hour": 5, "temp_c": 31.5, "hazard_level": 3}
+{"sim_hour": 6, "temp_c": 33.0, "hazard_level": 3}
+{"sim_hour": 7, "temp_c": 34.5, "hazard_level": 3}
+{"sim_hour": 8, "temp_c": 36.0, "hazard_level": 3}
+{"sim_hour": 9, "temp_c": 37.5, "hazard_level": 3}
